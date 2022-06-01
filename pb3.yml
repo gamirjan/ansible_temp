@@ -1,0 +1,36 @@
+- name: setup nginx
+  become: yes
+  hosts: Dbservers
+  tasks:
+    - name: Installing Wordpress  and dependencies
+      package:
+       name: "nginx"
+       state: present
+       update_cache: yes
+      become: yes
+    - name: start and enable mysql service
+      service:
+        name: mysql
+        state: started
+        enabled: yes
+    - name: Wordpress | Nginx | Copy virtual host configuration file
+      template:
+        src: "nginx.conf"
+        dest: "/etc/nginx/sites-available/nginx.conf"
+        owner: root
+        group: root
+        mode: 0644
+    - name: WordPress | Nginx | Symlink virtual host configuration file from sites-available to sites-enabled
+      file:
+        state: link
+        src: "/etc/nginx/sites-available/nginx.conf"
+        dest: "/etc/nginx/sites-enabled/nginx.conf"
+        owner: root
+        group: root
+        mode: 0644
+  handlers:
+    - name: Restart mysql
+      service:
+        name: nginx
+        state: restarted
+

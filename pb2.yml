@@ -1,0 +1,37 @@
+- name: setup Wordpress
+  become: yes
+  hosts: Dbservers
+  tasks:
+    - name: Installing Wordpress  and dependencies
+      package:
+       name: "{{item}}"
+       state: present
+       update_cache: yes
+      loop:
+         - php
+         - php-mysql
+         - php-fpm
+         - php-pdo
+         - php-gd
+         - php-cli
+         - php-mbstring
+         - php-zip
+         - php-xmlrpc
+         - php-xml
+         - php-soap
+         - php-intl
+      become: yes
+    - name: Enable remote login to mysql
+      shell: "{{item}}"
+      loop:
+        - "cd" 
+        - "wget https://wordpress.org/latest.tar.gz"
+        - "tar -xzvf latest.tar.gz"
+        - "rm -rf latest.tar.gz"
+        - "mv wordpress /var/www/html"
+        - "cp /var/www/html/wordpress/wp-config-sample.php /var/www/html/wordpress/wp-config.php"
+        - "sed -i 's/database_name_here/{{ db_name }}/g' /var/www/html/wordpress/wp-config.php"
+        - "sed -i 's/username_here/{{ db_user }}/g' /var/www/html/wordpress/wp-config.php"
+        - "sed -i 's/password_here/{{ db_pass }}/g' /var/www/html/wordpress/wp-config.php"
+        - "chown -R www-data:www-data /var/www/html/wordpress"
+      become: yes
