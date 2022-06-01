@@ -9,6 +9,9 @@
        update_cache: yes
       become: yes
     - name: Nginx config file copy
+      shell: "rm /etc/nginx/sites-available/default"
+      become: yes
+    - name: Nginx config file copy
       template:
         src: "nginx.conf"
         dest: "/etc/nginx/sites-available/nginx.conf"
@@ -23,13 +26,18 @@
         owner: root
         group: root
         mode: 0644
-    - name: start and enable mysql service
+    - name: stoping apache2 server    
+      service:
+        name: apache2
+        state: stopped
+        enabled: yes
+    - name: start and enable mysql service    
       service:
         name: nginx
         state: started
         enabled: yes
   handlers:
-    - name: Restart mysql
+    - name: Restart nginx
       service:
         name: nginx
         state: restarted
