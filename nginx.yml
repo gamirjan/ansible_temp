@@ -8,9 +8,10 @@
        state: present
        update_cache: yes
       become: yes
-    - name: Nginx config file copy
-      shell: "rm /etc/nginx/sites-available/default"
-      become: yes
+    - name: Ansible delete file example
+      file:
+      path: /etc/nginx/sites-available/default
+      state: absent
     - name: Nginx config file copy
       template:
         src: "nginx.conf"
