@@ -10,8 +10,9 @@
       become: yes
     - name: Ansible delete file example
       file:
-      path: /etc/nginx/sites-available/default
-      state: absent
+        path: /etc/nginx/sites-available/default
+        state: absent
+      become: yes
     - name: Nginx config file copy
       template:
         src: "nginx.conf"
