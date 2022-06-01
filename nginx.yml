@@ -14,15 +14,15 @@
     - name: Nginx config file copy
       template:
         src: "nginx.conf"
-        dest: "/etc/nginx/sites-available/nginx.conf"
+        dest: "/etc/nginx/sites-available/default"
         owner: root
         group: root
         mode: 0644
     - name: Nginx config file symlink
       file:
         state: link
-        src: "/etc/nginx/sites-available/nginx.conf"
-        dest: "/etc/nginx/sites-enabled/nginx.conf"
+        src: "/etc/nginx/sites-available/default"
+        dest: "/etc/nginx/sites-enabled/default"
         owner: root
         group: root
         mode: 0644
