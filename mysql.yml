@@ -2,7 +2,7 @@
   become: yes
   hosts: wp_server
   tasks:
-    - name: Installing Mysql  and dependencies
+    - name: Mysql Installation
       package:
        name: "{{item}}"
        state: present
@@ -13,23 +13,23 @@
          - python3-mysqldb
          - libmysqlclient-dev
       become: yes
-    - name: start and enable mysql service
+    - name: Mysql start
       service:
         name: mysql
         state: started
         enabled: yes
-    - name: creating mysql user (medium_post)
+    - name: MySQL user creation
       mysql_user:
         name: "{{db_user}}"
         password: "{{db_pass}}"
         priv: '*.*:ALL'
         host: '%'
         state: present
-    - name: creating medium_db
+    - name: MySQL DB creation
       mysql_db:
         name: "{{db_name}}"
         state: present
-    - name: Enable remote login to mysql
+    - name: Login to mysql
       lineinfile:
          path: /etc/mysql/mysql.conf.d/mysqld.cnf
          regexp: '^bind-address'
