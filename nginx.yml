@@ -1,0 +1,36 @@
+- name: setup nginx
+  become: yes
+  hosts: wp_server
+  tasks:
+    - name: Installing Nginx
+      package:
+       name: "nginx"
+       state: present
+       update_cache: yes
+      become: yes
+    - name: Nginx config file copy
+      template:
+        src: "nginx.conf"
+        dest: "/etc/nginx/sites-available/nginx.conf"
+        owner: root
+        group: root
+        mode: 0644
+    - name: Nginx config file symlink
+      file:
+        state: link
+        src: "/etc/nginx/sites-available/nginx.conf"
+        dest: "/etc/nginx/sites-enabled/nginx.conf"
+        owner: root
+        group: root
+        mode: 0644
+    - name: start and enable mysql service
+      service:
+        name: nginx
+        state: started
+        enabled: yes
+  handlers:
+    - name: Restart mysql
+      service:
+        name: nginx
+        state: restarted
+
