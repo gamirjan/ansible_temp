@@ -20,7 +20,7 @@
         priv: '*.*:ALL'
         host: '%'
         state: present
-        no_log: true
+      no_log: true
     - name: MySQL DB creation
       mysql_db:
         name: "{{db_name}}"
