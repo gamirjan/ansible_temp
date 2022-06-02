@@ -1,0 +1,35 @@
+    - name: Mysql Installation
+      package:
+       name: "{{item}}"
+       state: present
+       update_cache: yes
+      loop:
+         - mysql-server
+         - mysql-client 
+         - python3-mysqldb
+         - libmysqlclient-dev
+    - name: Mysql start
+      service:
+        name: mysql
+        state: started
+        enabled: yes
+    - name: MySQL user creation
+      mysql_user:
+        name: "{{db_user}}"
+        password: "{{db_pass}}"
+        priv: '*.*:ALL'
+        host: '%'
+        state: present
+        no_log: true
+    - name: MySQL DB creation
+      mysql_db:
+        name: "{{db_name}}"
+        state: present
+    - name: Login to mysql
+      lineinfile:
+         path: /etc/mysql/mysql.conf.d/mysqld.cnf
+         regexp: '^bind-address'
+         line: 'bind-address = 0.0.0.0'
+         backup: yes
+      notify:
+         - Restart mysql

@@ -1,0 +1,6 @@
+- hosts: wp_server
+  roles:
+    - role: 'mysql'
+    - role: 'wordpress'
+    - role: 'nginx'
+  become: yes
